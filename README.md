@@ -1,2 +1,2 @@
 # SpringProject
-My Spring projct practice
+My Spring project practice
