@@ -1,0 +1,16 @@
+server:
+# ?????
+  port: 8090
+
+spring:
+  # MySQL ??
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/my_database?useUnicode=true&useSSL=true&characterEncoding=utf8
+    username: root
+    password: 030319
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
