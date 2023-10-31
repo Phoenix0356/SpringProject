@@ -3,19 +3,15 @@ package com.demo.vo.param;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
+import org.springframework.web.bind.annotation.RequestParam;
 @Data
 @Accessors(chain = true)
-public class UserRegisterParam {
-    @ApiModelProperty("账号")
-    private String account;
-
-    @ApiModelProperty("密码")
-    private String password;
-
+public class UserParam {
+    @ApiModelProperty("用户ID")
+    int userId;
     @ApiModelProperty("用户名")
-    private String userName;
-
+    String username;
     @ApiModelProperty("头像")
-    private String avatar;
+    String avatar;
+
 }

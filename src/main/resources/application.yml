@@ -18,3 +18,6 @@ jwt:
 #  60*60*10
   expiration: 3600000
 
+avatar_storage:
+  default: default.jpg
+  path: E:/DataBase/Avatar/
