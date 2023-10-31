@@ -14,7 +14,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 jwt:
-  secret: aminuosaminuosaminuosaminuosaminuosaminuosaminuosaminuosaminuosaminuos
+  secret: aminuosaminuosaminuosaminuosaminuosaminuosaminuosaminuosaminuos
 #  60*60*10
   expiration: 3600000
 
