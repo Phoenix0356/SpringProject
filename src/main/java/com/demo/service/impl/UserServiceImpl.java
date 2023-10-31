@@ -2,6 +2,7 @@ package com.demo.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.demo.Util.DataUtil;
+import com.demo.Util.JwtTokenUtil;
 import com.demo.entity.User;
 import com.demo.mapper.UserMapper;
 import com.demo.service.UserService;
@@ -20,6 +21,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserMapper userMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    DataUtil dataUtil;
     @Override
     public ResultBean getUserById(int userId){
         User user=userMapper.selectById(userId);
@@ -38,7 +43,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isBlank(userName)) return ResultBean.error("The name can't be empty!");
         if (StringUtils.isBlank(passWord)) return ResultBean.error("The password can't be empty!");
 
-        User user= userMapper.selectOne(DataUtil.getQuerWrapper(User.class,"user_name",userName));
+        User user= userMapper.selectOne(dataUtil.getQuerWrapper(User.class,"user_name",userName));
         if (user!=null) return ResultBean.error("The name has already been taken");
         //insert date
         User newUser=new User();
@@ -56,11 +61,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isBlank(userName)) return ResultBean.error(" The user name can't be empty");
         if (StringUtils.isBlank(password)) return ResultBean.error(" The password can't be empty");
 
-        User user=userMapper.selectOne(DataUtil.getQuerWrapper(User.class,"user_name",userName));
+        User user=userMapper.selectOne(dataUtil.getQuerWrapper(User.class,"user_name",userName));
 
         if (user==null) return ResultBean.error("The user name may be wrong");
 
-        if (passwordEncoder.matches(password,user.getPassword())) return ResultBean.success("Login successfully");
+        if (passwordEncoder.matches(password,user.getPassword())) {
+            return ResultBean.success("Login successfully", jwtTokenUtil.createToken(user));
+        }
         else return ResultBean.error("Password is wrong");
     }
 }

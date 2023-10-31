@@ -22,8 +22,7 @@ public class UserController {
     }
     @ApiOperation("register")
     @PostMapping("/user/register")
-    public ResultBean register(@RequestBody UserRegisterParam userRegisterParam){
-        return userService.register(userRegisterParam);
+    public ResultBean register(@RequestBody UserRegisterParam userRegisterParam){return userService.register(userRegisterParam);
     }
 
     @ApiOperation("Login")
