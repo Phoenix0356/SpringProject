@@ -1,25 +1,24 @@
-package com.demo.Util;
+package com.demo.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataUtil {
     @Value("${avatar_storage.path}")
-    private String avatarPath;
+    private static String avatarPath;
     @Value("${avatar_storage.default}")
-    private String defaultAvatar;
+    private static String defaultAvatar;
 
-    public <T> QueryWrapper<T> getQueryWrapper(Class<T> clazz,
+    public static <T> QueryWrapper<T> getQueryWrapper(Class<T> clazz,
                                                      String tableField,String queryVale){
         QueryWrapper<T> queryWrapper=new QueryWrapper<>();
         return queryWrapper.eq(tableField,queryVale);
     }
 
-    public <T,U> UpdateWrapper<T> getUpdateWrapper(Class<T> clazz,
+    public static <T,U> UpdateWrapper<T> getUpdateWrapper(Class<T> clazz,
                                                           String queryTableField,String queryValue,
                                                           String updateTableField,U updateVale){
         UpdateWrapper<T> updateWrapper=new UpdateWrapper<>();
@@ -27,7 +26,7 @@ public class DataUtil {
         return updateWrapper.set(updateTableField,updateVale);
     }
 
-    public String saveAvatar(String fileName) {
+    public static String saveAvatar(String fileName) {
         if (fileName==null||fileName.isEmpty()) return avatarPath+defaultAvatar;
         else return avatarPath+fileName;
     }

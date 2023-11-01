@@ -1,7 +1,5 @@
 package com.demo.controller;
 
-import com.demo.Util.JwtTokenUtil;
-import com.demo.entity.User;
 import com.demo.service.UserService;
 import com.demo.vo.ResultBean;
 import com.demo.vo.param.UserLoginParam;
@@ -9,12 +7,8 @@ import com.demo.vo.param.UserParam;
 import com.demo.vo.param.UserRegisterParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "UserController")
 @RestController
@@ -31,7 +25,8 @@ public class UserController {
 //            return userService.getUserByToken(token);
 //        }
 //        return ResultBean.error("fetch information failed");
-        return userService.getUserByToken(token);
+
+        return userService.getUserByToken(token.replace("Bearer ", ""));
     }
 
 //    @ApiOperation("get user info")
@@ -70,8 +65,11 @@ public class UserController {
             return userService.login(userLoginParam);
     }
 
-//    @ApiOperation("logout")
-//    @
+    @ApiOperation("logout")
+    @PostMapping("/user/logout")
+    public ResultBean logout(){
+        return ResultBean.success("exit");
+    }
 
 
 }
