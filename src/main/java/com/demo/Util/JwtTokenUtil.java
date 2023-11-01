@@ -4,6 +4,7 @@ import com.demo.entity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -58,7 +59,8 @@ public class JwtTokenUtil {
         return claims;
     }
 
-    public String getUserIdFromToken(String token){
+    public Integer getUserIdFromToken(String tokenWithBearer){
+        String token = tokenWithBearer.replace("Bearer ", "");
         String userId;
         try {
             Claims claims = getClaimsFromToken(token);
@@ -66,7 +68,7 @@ public class JwtTokenUtil {
         }catch (Exception e){
             userId = null;
         }
-        return userId;
+        return Integer.parseInt(userId);
     }
 
 }

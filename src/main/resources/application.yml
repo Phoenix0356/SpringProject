@@ -20,4 +20,4 @@ jwt:
 
 avatar_storage:
   default: default.jpg
-  path: E:/DataBase/Avatar/
+  path: localhost:8090/E:/DataBase/Avatar/

@@ -13,7 +13,9 @@ public interface UserService extends IService<User> {
     ResultBean register(UserRegisterParam userRegisterParam);
     ResultBean login(UserLoginParam userLoginParam);
     ResultBean getUserByToken(String token);
-    ResultBean getUserById(int userId);
+//    ResultBean getUserById(int userId);
 
-    ResultBean updateUserById(UserParam userParam);
+    ResultBean updateUserByToken(String token,UserParam userParam);
+
+    ResultBean deleteUserByToken(String token);
 }

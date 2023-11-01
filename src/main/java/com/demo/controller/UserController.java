@@ -21,9 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
     @Autowired
     UserService userService;
-    @ApiOperation("get user info by id")
+    @ApiOperation("get user info by token")
     @GetMapping("/user/home")
-    public ResultBean getUserInfoById(@RequestParam("userId") int userId){
+    public ResultBean getUserInfoById(@RequestHeader("Authoriation") String token){
         //for request header
 //        String authHeader = request.getHeader("Authorization");
 //        if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -31,13 +31,9 @@ public class UserController {
 //            return userService.getUserByToken(token);
 //        }
 //        return ResultBean.error("fetch information failed");
-        return userService.getUserById(userId);
+        return userService.getUserByToken(token);
     }
-//    @ApiOperation("get user info by id")
-//    @GetMapping("/user/home")
-//    public ResultBean getUserInfoByToken(@RequestParam("token") String token){
-//        return userService.getUserByToken(token);
-//    }
+
 //    @ApiOperation("get user info")
 //    @GetMapping("/user/home")
 //    public ResultBean getUserInfo(@RequestParam(required = false) Integer userId, @RequestParam(required = false) String token){
@@ -52,8 +48,14 @@ public class UserController {
 
     @ApiOperation("update user info by id")
     @PutMapping("/user/update")
-    public ResultBean updateUserInfoById(@RequestBody UserParam userParam){
-        return userService.updateUserById(userParam);
+    public ResultBean updateUserInfoById(@RequestHeader("Authorization") String token, @RequestBody UserParam userParam){
+        return userService.updateUserByToken(token, userParam);
+    }
+
+    @ApiOperation("delete user account")
+    @DeleteMapping("/user/delete")
+    public ResultBean deleteUserByToken(@RequestHeader("Authorization") String token){
+        return userService.deleteUserByToken(token);
     }
 
     @ApiOperation("register")
@@ -67,6 +69,9 @@ public class UserController {
     public ResultBean login(@RequestBody UserLoginParam userLoginParam){
             return userService.login(userLoginParam);
     }
+
+//    @ApiOperation("logout")
+//    @
 
 
 }

@@ -6,14 +6,12 @@ import com.demo.Util.JwtTokenUtil;
 import com.demo.entity.User;
 import com.demo.mapper.UserMapper;
 import com.demo.service.UserService;
-import com.demo.vo.LoginBean;
 import com.demo.vo.ResultBean;
 import com.demo.vo.param.UserLoginParam;
 import com.demo.vo.param.UserParam;
 import com.demo.vo.param.UserRegisterParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -54,8 +52,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         //insert()返回1表示插入成功，返回0表示插入失败
         if (userMapper.insert(newUser)==1) return ResultBean.success("注册成功",
-                new LoginBean(jwtTokenUtil.createToken(newUser.getUserId().toString()),
-                        newUser.getUserId()));
+                jwtTokenUtil.createToken(newUser.getUserId().toString()));
         else return ResultBean.error("register successfully");
     }
     @Override
@@ -72,38 +69,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user==null) return ResultBean.error("The user name may be wrong");
 
         if (passwordEncoder.matches(password,user.getPassword())) {
-            String userId=user.getUserId().toString();
-            return ResultBean.success("Login successfully",
-                    new LoginBean(jwtTokenUtil.createToken(user.getUserId().toString()),
-                            user.getUserId()));
+            return ResultBean.success("注册成功",
+                    jwtTokenUtil.createToken(user.getUserId().toString()));
         }
         else return ResultBean.error("Password is wrong");
     }
     @Override
     public ResultBean getUserByToken(String token){
-        String userId=jwtTokenUtil.getUserIdFromToken(token);
+        Integer userId=jwtTokenUtil.getUserIdFromToken(token);
         User user=userMapper.selectById(userId);
         if (user == null) return ResultBean.error("User not found");
         user.setPassword(null);
         return ResultBean.success("get information successfully", user);
     }
-    @Override
-    public ResultBean getUserById(int userId){
-        User user=userMapper.selectById(userId);
-        if (user == null) return ResultBean.error("User not found");
-        user.setPassword(null);
-        return ResultBean.success("get information successfully", user);
-    }
+//    @Override
+//    public ResultBean getUserById(int userId){
+//        User user=userMapper.selectById(userId);
+//        if (user == null) return ResultBean.error("User not found");
+//        user.setPassword(null);
+//        return ResultBean.success("get information successfully", user);
+//    }
 
     @Override
-    public ResultBean updateUserById(UserParam userParam) {
-        User user=userMapper.selectById(userParam.getUserId());
+    public ResultBean updateUserByToken(String token,UserParam userParam) {
+        User user=userMapper.selectById(jwtTokenUtil.getUserIdFromToken(token));
 
         user.setUserName(userParam.getUsername());
         user.setAvatar(dataUtil.saveAvatar(userParam.getAvatar()));
 
         this.updateById(user);
         return ResultBean.success("information update successfully",user);
+    }
+    @Override
+    public ResultBean deleteUserByToken(String token){
+        int result=userMapper.deleteById(jwtTokenUtil.getUserIdFromToken(token));
+        return result>0?ResultBean.success("Account delete successfully"):ResultBean.error("Account delete unsuccessfully");
     }
 
 

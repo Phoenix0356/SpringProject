@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Data
 @Accessors(chain = true)
 public class UserParam {
-    @ApiModelProperty("用户ID")
-    int userId;
     @ApiModelProperty("用户名")
     String username;
     @ApiModelProperty("头像")
