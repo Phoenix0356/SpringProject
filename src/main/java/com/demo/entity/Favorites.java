@@ -17,6 +17,8 @@ public class Favorites {
     String itemName;
     @TableField("icon")
     String icon;
+    @TableField("introduce")
+    String introduce;
     @TableField("url")
     String url;
 

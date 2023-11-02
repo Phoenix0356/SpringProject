@@ -11,10 +11,12 @@ public class FavoritesServiceImpl extends ServiceImpl<FavoritesMapper, Favorites
     @Autowired
     private FavoritesMapper favoritesMapper;
 
-//    @Override
-//    public ResultBean getFavorById(Integer id){
-//
-//    }
+    @Override
+    public ResultBean getFavorById(Integer id){
+        Favorites favorites=favoritesMapper.selectById(id);
+        if (favorites!=null) return ResultBean.success("success",favorites);
+        else return ResultBean.error("failure");
+    }
 
 
 
