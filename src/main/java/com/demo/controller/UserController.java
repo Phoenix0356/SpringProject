@@ -42,12 +42,12 @@ public class UserController {
 //        }
 //    }
 
-    @ApiOperation("update user info by id")
+    @ApiOperation("update user info")
     @PutMapping("/user/update")
     public ResultBean updateUserInfoById(@RequestHeader("Authorization") String token, @RequestBody UserParam userParam){
         return userService.updateUserByToken(token, userParam);
     }
-    @ApiOperation("update user info by id")
+    @ApiOperation("update user password")
     @PutMapping("/user/password/update")
     public ResultBean updateUserPassword(@RequestHeader("Authorization")String token, @RequestBody UserPasswordUpdateParam userPasswordUpdateParam){
         return userService.updatePassword(token,userPasswordUpdateParam);
