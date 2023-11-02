@@ -21,37 +21,36 @@ import java.util.HashMap;
 public class JwtTokenUtil {
     @Autowired
     UserMapper userMapper;
-    private static final String CLAIM_KEY_USERId = "userId";
-    private static final String CLAIM_KEY_USERNAME = "account";
-    private  static  final String CLAIM_KEY_CREATED = "createdTime";
-    private static UserDetailsService userDetailsService;
+    private final String CLAIM_KEY_USERId = "userId";
+    private final String CLAIM_KEY_USERNAME = "account";
+    private  final String CLAIM_KEY_CREATED = "createdTime";
 
     @Value("${jwt.expiration}")
-    private static long expiration;
+    private long expiration;
     @Value ("${jwt.secret}")
-    private static String secret;
+    private String secret;
 
 
-    private static SecretKey getSigningKey() {
+    private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
-    private static String createToken(HashMap<String,Object> claims){
+    private String createToken(HashMap<String,Object> claims){
         return Jwts.builder()
                 .claims(claims)
                 .expiration(new Date(System.currentTimeMillis() + expiration*1000))
                 .signWith(getSigningKey())
                 .compact();
     }
-    public static String createToken(User user){
+    public String createToken(User user){
         HashMap<String,Object> claims=new HashMap<>();
         claims.put(CLAIM_KEY_USERId,String.valueOf(user.getUserId()));
         claims.put(CLAIM_KEY_USERNAME,user.getAccount());
         claims.put(CLAIM_KEY_CREATED,new Date());
         return createToken(claims);
     }
-    public static Claims getClaimsFromToken(String token) {
-        Claims claims=null;
+    public Claims getClaimsFromToken(String token) {
+        Claims claims;
         try {
             claims = Jwts.parser()
                     .verifyWith(getSigningKey())
@@ -65,7 +64,7 @@ public class JwtTokenUtil {
     }
 
 
-    public static Integer getUserIdFromToken(String token){
+    public Integer getUserIdFromToken(String token){
         String userId;
         Claims claims = getClaimsFromToken(token);
         if (claims==null) return null;
@@ -73,8 +72,7 @@ public class JwtTokenUtil {
         return Integer.parseInt(userId);
     }
 
-   public boolean isValidateToken(String token){
-        Claims claims = getClaimsFromToken(token);
+   public boolean isValidateToken(String token,Claims claims){
         String account = userMapper.selectById(getUserIdFromToken(token)).getAccount();
         if (claims==null||account==null) return false;
         String accountOfToken = claims.get("account").toString();

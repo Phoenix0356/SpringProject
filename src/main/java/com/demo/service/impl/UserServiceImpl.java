@@ -9,8 +9,8 @@ import com.demo.service.UserService;
 import com.demo.vo.ResultBean;
 import com.demo.vo.param.UserLoginParam;
 import com.demo.vo.param.UserParam;
+import com.demo.vo.param.UserPasswordUpdateParam;
 import com.demo.vo.param.UserRegisterParam;
-import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,6 +25,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private PasswordEncoder passwordEncoder;
     @Autowired
     JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    DataUtil dataUtil;
 
 
 
@@ -38,21 +40,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isBlank(userName)) return ResultBean.error("The name can't be empty!");
         if (StringUtils.isBlank(account)) return ResultBean.error("The account can't be empty!");
         if (StringUtils.isBlank(passWord)) return ResultBean.error("The password can't be empty!");
-        if (StringUtils.isBlank(avatar)) avatar=DataUtil.saveAvatar(avatar);
+        ;
 
-        User user= userMapper.selectOne(DataUtil.getQueryWrapper(User.class,"account",account));
+        User user= userMapper.selectOne(dataUtil.getQueryWrapper(User.class,"account",account));
         if (user!=null) return ResultBean.error("The account is already exist");
         //insert date
         User newUser=new User();
         newUser.setUsername(userName);
         newUser.setAccount(account);
-        newUser.setPassword(new BCryptPasswordEncoder().encode(passWord));
-        newUser.setAvatar(userRegisterParam.getAvatar());
-        newUser.setAvatar(avatar);
+        newUser.setPassword(encodePassword(passWord));
+        newUser.setAvatar(dataUtil.saveAvatar(avatar));
+
 
         //insert()返回1表示插入成功，返回0表示插入失败
         if (userMapper.insert(newUser)==1) return ResultBean.success("注册成功",
-                JwtTokenUtil.createToken(newUser));
+                jwtTokenUtil.createToken(newUser));
         else return ResultBean.error("register successfully");
     }
     @Override
@@ -63,24 +65,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isBlank(account)) return ResultBean.error(" The account can't be empty");
         if (StringUtils.isBlank(password)) return ResultBean.error(" The password can't be empty");
 
-        User user=userMapper.selectOne(DataUtil.getQueryWrapper(User.class,
+        User user=userMapper.selectOne(dataUtil.getQueryWrapper(User.class,
                 "account",account));
 
         if (user==null) return ResultBean.error("The user name may be wrong");
 
-        if (passwordEncoder.matches(password,user.getPassword())) {
+        if (matchPassword(password,user.getPassword())) {
             return ResultBean.success("login successfully",
-                    JwtTokenUtil.createToken(user));
+                    jwtTokenUtil.createToken(user));
         }
         else return ResultBean.error("Password is wrong");
     }
     @Override
     public ResultBean getUserByToken(String token){
-        Integer userId=JwtTokenUtil.getUserIdFromToken(token);
+        Integer userId=jwtTokenUtil.getUserIdFromToken(token);
         User user=userMapper.selectById(userId);
         if (user == null) return ResultBean.error("User not found");
         user.setPassword(null);
-        return ResultBean.success("get information successfully", user);
+        return ResultBean.success("Get information successfully", user);
     }
 //    @Override
 //    public ResultBean getUserById(int userId){
@@ -92,20 +94,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public ResultBean updateUserByToken(String token,UserParam userParam) {
-        User user=userMapper.selectById(JwtTokenUtil.getUserIdFromToken(token));
-        if (!jwtTokenUtil.isValidateToken(token)){
-            return ResultBean.error("please login again");
-        }
-
+        User user=userMapper.selectById(jwtTokenUtil.getUserIdFromToken(token));
         user.setUsername(userParam.getUsername());
-        user.setAvatar(DataUtil.saveAvatar(userParam.getAvatar()));
-
+        user.setAvatar(dataUtil.saveAvatar(userParam.getAvatar()));
         this.updateById(user);
         return ResultBean.success("information update successfully",user);
     }
     @Override
     public ResultBean deleteUserByToken(String token){
-        int result=userMapper.deleteById(JwtTokenUtil.getUserIdFromToken(token));
+        int result=userMapper.deleteById(jwtTokenUtil.getUserIdFromToken(token));
         return result>0?ResultBean.success("Account delete successfully"):ResultBean.error("Account delete unsuccessfully");
     }
+
+    @Override
+    public ResultBean updatePassword(String token, UserPasswordUpdateParam userPasswordUpdateParam){
+        User user=userMapper.selectById(jwtTokenUtil.getUserIdFromToken(token));
+        if (matchPassword(userPasswordUpdateParam.getPrePassword(),user.getPassword())){
+            user.setPassword(encodePassword(userPasswordUpdateParam.getNewPassword()));
+            userMapper.updateById(user);
+            return ResultBean.success("Password update successfully");
+        }else return ResultBean.error("Wrong password");
+    }
+
+    @Override
+    public boolean matchPassword(String passwordInput, String passwordOrigin){
+        return passwordEncoder.matches(passwordInput,passwordOrigin);
+    }
+    @Override
+    public String encodePassword(String password){
+        return new BCryptPasswordEncoder().encode(password);
+    }
+
 }

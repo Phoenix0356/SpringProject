@@ -4,6 +4,7 @@ import com.demo.service.UserService;
 import com.demo.vo.ResultBean;
 import com.demo.vo.param.UserLoginParam;
 import com.demo.vo.param.UserParam;
+import com.demo.vo.param.UserPasswordUpdateParam;
 import com.demo.vo.param.UserRegisterParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,6 +46,11 @@ public class UserController {
     @PutMapping("/user/update")
     public ResultBean updateUserInfoById(@RequestHeader("Authorization") String token, @RequestBody UserParam userParam){
         return userService.updateUserByToken(token, userParam);
+    }
+    @ApiOperation("update user info by id")
+    @PutMapping("/user/password/update")
+    public ResultBean updateUserPassword(@RequestHeader("Authorization")String token, @RequestBody UserPasswordUpdateParam userPasswordUpdateParam){
+        return userService.updatePassword(token,userPasswordUpdateParam);
     }
 
     @ApiOperation("delete user account")
