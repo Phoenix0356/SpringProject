@@ -1,1 +1,1 @@
-excludePaths=/swagger-ui/, /test, /user/login,/user/register
+excludePaths=/swagger-ui/index.html, /test, /user/login,/user/register
