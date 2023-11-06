@@ -1,23 +1,30 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import {RouterLink, RouterView, useRouter} from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+const router = useRouter()
+const navigateToTest = () => {
+  window.location.href = 'http://localhost:8090/test'
+}
 </script>
 
 <template>
+  <el-button type="primary" @click="navigateToTest">click me</el-button>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/test">About</RouterLink>
-      </nav>
-    </div>
+<!--    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />-->
+
+<!--    <div class="wrapper">-->
+<!--      <HelloWorld msg="You did it!" />-->
+
+<!--      <nav>-->
+<!--        <RouterLink to="/">Home</RouterLink>-->
+<!--        <RouterLink to="/test">About</RouterLink>-->
+<!--      </nav>-->
+<!--    </div>-->
   </header>
 
-  <RouterView />
+<!--  <RouterView />-->
 </template>
 
 <style scoped>

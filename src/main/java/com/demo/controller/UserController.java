@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLOutput;
+
 @Api(tags = "UserController")
 @RestController
 public class UserController {
@@ -60,9 +62,10 @@ public class UserController {
     }
 
     @ApiOperation("register")
-    @PostMapping("/user/register")
-    public ResultBean register(@RequestBody UserRegisterParam userRegisterParam){
-        return userService.register(userRegisterParam);
+    @GetMapping("/user/register")
+    public ResultBean register(){
+        return ResultBean.success("ssssssssssssss");
+        //return userService.register(userRegisterParam);
     }
 
     @ApiOperation("Login")

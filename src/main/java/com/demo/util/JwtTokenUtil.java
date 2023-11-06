@@ -21,9 +21,6 @@ import java.util.HashMap;
 public class JwtTokenUtil {
     @Autowired
     UserMapper userMapper;
-    private final String CLAIM_KEY_USERId = "userId";
-    private final String CLAIM_KEY_USERNAME = "account";
-    private  final String CLAIM_KEY_CREATED = "createdTime";
 
     @Value("${jwt.expiration}")
     private long expiration;
@@ -44,13 +41,13 @@ public class JwtTokenUtil {
     }
     public String createToken(User user){
         HashMap<String,Object> claims=new HashMap<>();
-        claims.put(CLAIM_KEY_USERId,String.valueOf(user.getUserId()));
-        claims.put(CLAIM_KEY_USERNAME,user.getAccount());
-        claims.put(CLAIM_KEY_CREATED,new Date());
+        claims.put("sub",String.valueOf(user.getUserId()));
+        claims.put("iss",user.getAccount());
+        claims.put("exp",new Date());
         return createToken(claims);
     }
-    public Claims getClaimsFromToken(String token) {
-        Claims claims;
+    public Claims validateToken(String token) {
+        Claims claims = null;
         try {
             claims = Jwts.parser()
                     .verifyWith(getSigningKey())
@@ -66,16 +63,11 @@ public class JwtTokenUtil {
 
     public Integer getUserIdFromToken(String token){
         String userId;
-        Claims claims = getClaimsFromToken(token);
+        Claims claims = validateToken(token);
         if (claims==null) return null;
-        userId = claims.get("userId").toString();
+        userId = claims.get("sub").toString();
         return Integer.parseInt(userId);
     }
 
-   public boolean isValidateToken(String token,Claims claims){
-        String account = userMapper.selectById(getUserIdFromToken(token)).getAccount();
-        if (claims==null||account==null) return false;
-        String accountOfToken = claims.get("account").toString();
-        return account.equals(accountOfToken);
-    }
+
 }
