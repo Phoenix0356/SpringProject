@@ -15,8 +15,6 @@ public class Favorites {
     Integer id;
     @TableField("item_name")
     String itemName;
-    @TableField("icon")
-    String icon;
     @TableField("introduce")
     String introduce;
     @TableField("url")

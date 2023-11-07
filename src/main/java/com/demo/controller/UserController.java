@@ -62,10 +62,9 @@ public class UserController {
     }
 
     @ApiOperation("register")
-    @GetMapping("/user/register")
-    public ResultBean register(){
-        return ResultBean.success("ssssssssssssss");
-        //return userService.register(userRegisterParam);
+    @PostMapping("/user/register")
+    public ResultBean register(@RequestBody UserRegisterParam userRegisterParam){
+        return userService.register(userRegisterParam);
     }
 
     @ApiOperation("Login")

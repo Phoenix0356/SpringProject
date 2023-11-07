@@ -16,7 +16,7 @@ import java.util.Collection;
 @Data
 @ToString
 @TableName("user")
-public class User implements UserDetails {
+public class User  {
     @TableId(value = "user_Id", type = IdType.AUTO)
     private Integer userId;
 
@@ -31,33 +31,4 @@ public class User implements UserDetails {
 
     @TableField("avatar")
     private String avatar;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
-
-//    public String toString(int userId){
-//        return String.valueOf(userId);
-//    }
 }

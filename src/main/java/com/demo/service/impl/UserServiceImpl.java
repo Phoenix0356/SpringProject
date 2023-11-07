@@ -26,9 +26,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     JwtTokenUtil jwtTokenUtil;
     @Autowired
-    DataUtil dataUtil;
-
-
+    DataUtil<User> dataUtil;
 
     @Override
     public ResultBean register(UserRegisterParam userRegisterParam){
@@ -40,9 +38,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isBlank(userName)) return ResultBean.error("The name can't be empty!");
         if (StringUtils.isBlank(account)) return ResultBean.error("The account can't be empty!");
         if (StringUtils.isBlank(passWord)) return ResultBean.error("The password can't be empty!");
-        ;
 
-        User user= userMapper.selectOne(dataUtil.getQueryWrapper(User.class,"account",account));
+
+        User user= userMapper.selectOne(dataUtil.getQueryWrapper("account",account));
         if (user!=null) return ResultBean.error("The account is already exist");
         //insert date
         User newUser=new User();
@@ -50,12 +48,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         newUser.setAccount(account);
         newUser.setPassword(encodePassword(passWord));
         newUser.setAvatar(dataUtil.saveAvatar(avatar));
-
-
         //insert()返回1表示插入成功，返回0表示插入失败
-        if (userMapper.insert(newUser)==1) return ResultBean.success("注册成功",
-                jwtTokenUtil.createToken(newUser));
-        else return ResultBean.error("register successfully");
+        return dataUtil.isOperationSuccess(userMapper.insert(newUser),newUser);
     }
     @Override
     public ResultBean login(UserLoginParam userLoginParam){
@@ -65,8 +59,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isBlank(account)) return ResultBean.error(" The account can't be empty");
         if (StringUtils.isBlank(password)) return ResultBean.error(" The password can't be empty");
 
-        User user=userMapper.selectOne(dataUtil.getQueryWrapper(User.class,
-                "account",account));
+        User user=userMapper.selectOne(dataUtil.getQueryWrapper("account",account));
 
         if (user==null) return ResultBean.error("The user name may be wrong");
 
@@ -97,13 +90,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user=userMapper.selectById(jwtTokenUtil.getUserIdFromToken(token));
         user.setUsername(userParam.getUsername());
         user.setAvatar(dataUtil.saveAvatar(userParam.getAvatar()));
-        this.updateById(user);
-        return ResultBean.success("information update successfully",user);
+        return dataUtil.isOperationSuccess(userMapper.updateById(user),user);
     }
     @Override
     public ResultBean deleteUserByToken(String token){
-        int result=userMapper.deleteById(jwtTokenUtil.getUserIdFromToken(token));
-        return result>0?ResultBean.success("Account delete successfully"):ResultBean.error("Account delete unsuccessfully");
+        return dataUtil.isOperationSuccess(userMapper.deleteById(jwtTokenUtil.getUserIdFromToken(token)));
     }
 
     @Override
@@ -111,8 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user=userMapper.selectById(jwtTokenUtil.getUserIdFromToken(token));
         if (matchPassword(userPasswordUpdateParam.getPrePassword(),user.getPassword())){
             user.setPassword(encodePassword(userPasswordUpdateParam.getNewPassword()));
-            userMapper.updateById(user);
-            return ResultBean.success("Password update successfully");
+            return dataUtil.isOperationSuccess(userMapper.updateById(user),user);
         }else return ResultBean.error("Wrong password");
     }
 
