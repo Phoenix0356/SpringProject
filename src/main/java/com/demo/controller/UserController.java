@@ -69,9 +69,7 @@ public class UserController {
 
     @ApiOperation("Login")
     @PostMapping("/user/login")
-    public ResultBean login(@RequestBody UserLoginParam userLoginParam){
-            return userService.login(userLoginParam);
-    }
+    public ResultBean login(@RequestBody UserLoginParam userLoginParam){return userService.login(userLoginParam);}
 
     @ApiOperation("logout")
     @PostMapping("/user/logout")

@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface FavoritesService extends IService<Favorites> {
-    ResultBean getFavorById(Integer id);
+    ResultBean getFavorById(Integer favId);
 
     ResultBean createFavorites(FavoritesParam favoritesParam);
 
     ResultBean updateFavorites(FavoritesParam favoritesParam);
 
-    ResultBean deleteFavorites(Integer id);
+    ResultBean deleteFavorites(Integer favId);
 }

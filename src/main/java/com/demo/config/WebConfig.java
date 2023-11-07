@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
         private final JwtInterceptor jwtInterceptor;
         @Value("${excludePaths}")
         String[] excludePaths;
+
         public WebConfig(JwtInterceptor jwtInterceptor) {
             this.jwtInterceptor = jwtInterceptor;
         }
@@ -23,6 +24,5 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
             registry.addInterceptor(jwtInterceptor)
                     .excludePathPatterns(excludePaths);
 
-
+        }
     }
-}

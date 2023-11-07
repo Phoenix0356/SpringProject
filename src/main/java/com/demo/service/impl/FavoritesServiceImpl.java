@@ -15,11 +15,11 @@ public class FavoritesServiceImpl extends ServiceImpl<FavoritesMapper, Favorites
     @Autowired
     private FavoritesMapper favoritesMapper;
     @Autowired
-    private DataUtil dataUtil;
+    private DataUtil<Favorites> dataUtil;
 
     @Override
-    public ResultBean getFavorById(Integer id){
-        Favorites favorites=favoritesMapper.selectById(id);
+    public ResultBean getFavorById(Integer favId){
+        Favorites favorites=favoritesMapper.selectById(favId);
         if (favorites!=null) return ResultBean.success("success",favorites);
         else return ResultBean.error("failure");
     }
@@ -28,22 +28,22 @@ public class FavoritesServiceImpl extends ServiceImpl<FavoritesMapper, Favorites
     public ResultBean createFavorites(FavoritesParam favoritesParam){
         Favorites favorites=new Favorites();
         favorites.setItemName(favoritesParam.getItemName());
-        favorites.setIntroduce(favoritesParam.getIntroduce());
+        favorites.setIntroduction(favoritesParam.getIntroduction());
         favorites.setUrl(favoritesParam.getUrl());
         return dataUtil.isOperationSuccess(favoritesMapper.insert(favorites),favorites);
     }
     @Override
     public ResultBean updateFavorites(FavoritesParam favoritesParam){
-        Favorites favorites=favoritesMapper.selectById(favoritesParam.getId());
+        Favorites favorites=favoritesMapper.selectById(favoritesParam.getFavId());
         favorites.setItemName(favoritesParam.getItemName());
-        favorites.setIntroduce(favoritesParam.getIntroduce());
-        favorites.setUrl(favorites.getUrl());
+        favorites.setIntroduction(favoritesParam.getIntroduction());
+        favorites.setUrl(favoritesParam.getUrl());
         return dataUtil.isOperationSuccess(favoritesMapper.updateById(favorites),favorites);
     }
 
     @Override
-    public ResultBean deleteFavorites(Integer id){
-        return dataUtil.isOperationSuccess(favoritesMapper.deleteById(id));
+    public ResultBean deleteFavorites(Integer favId){
+        return dataUtil.isOperationSuccess(favoritesMapper.deleteById(favId));
     }
 
 

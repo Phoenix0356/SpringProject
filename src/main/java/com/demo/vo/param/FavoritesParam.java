@@ -8,12 +8,12 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class FavoritesParam {
-    @ApiModelProperty("id")
-    Integer id;
+    @ApiModelProperty("favorites_id")
+    Integer favId;
     @ApiModelProperty("itemName")
     String itemName;
-    @ApiModelProperty("introduce")
-    String introduce;
+    @ApiModelProperty("introduction")
+    String introduction;
     @ApiModelProperty("url")
     String url;
 }

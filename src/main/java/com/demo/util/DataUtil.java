@@ -24,7 +24,6 @@ public class DataUtil<T> {
 //        updateWrapper.eq(queryTableField,queryValue);
 //        return updateWrapper.set(updateTableField,updateVale);
 //    }
-
     public String saveAvatar(String fileName) {
         if (fileName==null||fileName.isEmpty()) return avatarPath+defaultAvatar;
         else return avatarPath+fileName;
@@ -35,6 +34,5 @@ public class DataUtil<T> {
     public ResultBean isOperationSuccess(Integer flag){
         return flag>0?ResultBean.success("success"):ResultBean.error("fail");
     }
-
 
 }

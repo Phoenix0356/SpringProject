@@ -59,8 +59,6 @@ public class JwtTokenUtil {
         }
         return claims;
     }
-
-
     public Integer getUserIdFromToken(String token){
         String userId;
         Claims claims = validateToken(token);

@@ -9,25 +9,35 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "FavoritesController")
-@Controller
+@RestController
 public class FavoritesController {
     @Autowired
     FavoritesService favoritesService;
     @ApiOperation("get favorites info by token")
-    @GetMapping("/user/favorites")
-    public ResultBean getFavoritesById(@RequestParam("favorite_id")Integer id){
-        return favoritesService.getFavorById(id);
+    @GetMapping("/favorites/get")
+    public ResultBean getFavoritesById(@RequestParam("fav_id")Integer favId){
+        return favoritesService.getFavorById(favId);
     }
 
-    @ApiOperation("get favorites info by token")
-    @PutMapping("/user/favorites/create")
+    @ApiOperation("create favorites")
+    @PostMapping("/favorites/create")
     public ResultBean createFavoritesById(@RequestBody FavoritesParam favoritesParam){
         return favoritesService.createFavorites(favoritesParam);
     }
+
+    @ApiOperation("update favorite by id")
+    @PutMapping("/favorites/update")
+    public ResultBean updateFavoritesById(@RequestBody FavoritesParam favoritesParam){
+        return favoritesService.updateFavorites(favoritesParam);
+    }
+    @ApiOperation("delete favorites by id")
+    @DeleteMapping("/favorites/delete")
+    public ResultBean deleteFavoritesById(@RequestParam("fav_id") Integer favId){
+        return favoritesService.deleteFavorites(favId);
+    }
+
+
 }
