@@ -17,8 +17,8 @@ import java.util.Collection;
 @ToString
 @TableName("user")
 public class User  {
-    @TableId(value = "user_Id", type = IdType.AUTO)
-    private Integer userId;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     @TableField("account")
     private String account;

@@ -16,16 +16,22 @@ import org.springframework.web.bind.annotation.*;
 public class FavoritesController {
     @Autowired
     FavoritesService favoritesService;
-    @ApiOperation("get favorites info by token")
+    @ApiOperation("get favorites info by id")
     @GetMapping("/favorites/get")
-    public ResultBean getFavoritesById(@RequestParam("fav_id")Integer favId){
-        return favoritesService.getFavorById(favId);
+    public ResultBean getFavoritesById(@RequestParam("id")Integer id){
+        return favoritesService.getFavorById(id);
+    }
+
+    @ApiOperation("get favorites list by token")
+    @GetMapping("/favorites/home")
+    public ResultBean getFavoritesByUserId(@RequestHeader("Authorization") String token){
+        return favoritesService.getFavorByUserId(token);
     }
 
     @ApiOperation("create favorites")
     @PostMapping("/favorites/create")
-    public ResultBean createFavoritesById(@RequestBody FavoritesParam favoritesParam){
-        return favoritesService.createFavorites(favoritesParam);
+    public ResultBean createFavoritesById(@RequestHeader("Authorization") String token,@RequestBody FavoritesParam favoritesParam){
+        return favoritesService.createFavorites(token,favoritesParam);
     }
 
     @ApiOperation("update favorite by id")
@@ -35,8 +41,8 @@ public class FavoritesController {
     }
     @ApiOperation("delete favorites by id")
     @DeleteMapping("/favorites/delete")
-    public ResultBean deleteFavoritesById(@RequestParam("fav_id") Integer favId){
-        return favoritesService.deleteFavorites(favId);
+    public ResultBean deleteFavoritesById(@RequestHeader("Authorization") String token,@RequestParam("fav_id") Integer favId){
+        return favoritesService.deleteFavorites(token,favId);
     }
 
 

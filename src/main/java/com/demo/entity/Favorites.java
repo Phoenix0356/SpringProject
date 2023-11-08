@@ -11,13 +11,14 @@ import lombok.ToString;
 @ToString
 @TableName("favorites")
 public class Favorites {
-    @TableId(value = "fav_id",type = IdType.AUTO)
-    Integer favId;
+    @TableId(value = "id",type = IdType.AUTO)
+    Integer id;
     @TableField("item_name")
     String itemName;
     @TableField("introduction")
     String introduction;
     @TableField("url")
     String url;
+
 
 }

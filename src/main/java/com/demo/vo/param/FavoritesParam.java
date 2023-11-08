@@ -9,7 +9,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class FavoritesParam {
     @ApiModelProperty("favorites_id")
-    Integer favId;
+    Integer id;
+//    @ApiModelProperty("user_id")
+//    Integer userId;
     @ApiModelProperty("itemName")
     String itemName;
     @ApiModelProperty("introduction")
