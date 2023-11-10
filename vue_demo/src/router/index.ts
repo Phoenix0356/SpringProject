@@ -10,7 +10,7 @@ const router = VueRouter.createRouter({
     },
     {
       name: "login",
-      path: "/user/login",
+      path: "/api/user/login",
       component: LoginPage,
     }
   ]

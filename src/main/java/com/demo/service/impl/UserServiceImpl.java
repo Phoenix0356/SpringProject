@@ -11,6 +11,7 @@ import com.demo.vo.param.UserLoginParam;
 import com.demo.vo.param.UserParam;
 import com.demo.vo.param.UserPasswordUpdateParam;
 import com.demo.vo.param.UserRegisterParam;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -70,8 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         else return ResultBean.error("Password is wrong");
     }
     @Override
-    public ResultBean getUserByToken(String token){
-        Integer userId=jwtTokenUtil.getUserIdFromToken(token);
+    public ResultBean getUserByToken(Integer userId){
         User user=userMapper.selectById(userId);
         if (user == null) return ResultBean.error("User not found");
         user.setPassword(null);
@@ -86,20 +86,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 //    }
 
     @Override
-    public ResultBean updateUserByToken(String token,UserParam userParam) {
-        User user=userMapper.selectById(jwtTokenUtil.getUserIdFromToken(token));
+    public ResultBean updateUserByToken(Integer userId, UserParam userParam) {
+        User user=userMapper.selectById(userId);
         user.setUsername(userParam.getUsername());
         user.setAvatar(dataUtil.saveAvatar(userParam.getAvatar()));
         return dataUtil.isOperationSuccess(userMapper.updateById(user),user);
     }
     @Override
-    public ResultBean deleteUserByToken(String token){
-        return dataUtil.isOperationSuccess(userMapper.deleteById(jwtTokenUtil.getUserIdFromToken(token)));
+    public ResultBean deleteUserByToken(Integer userId){
+        return dataUtil.isOperationSuccess(userMapper.deleteById(userId));
     }
 
     @Override
-    public ResultBean updatePassword(String token, UserPasswordUpdateParam userPasswordUpdateParam){
-        User user=userMapper.selectById(jwtTokenUtil.getUserIdFromToken(token));
+    public ResultBean updatePassword(Integer userId, UserPasswordUpdateParam userPasswordUpdateParam){
+        User user=userMapper.selectById(userId);
         if (matchPassword(userPasswordUpdateParam.getPrePassword(),user.getPassword())){
             user.setPassword(encodePassword(userPasswordUpdateParam.getNewPassword()));
             return dataUtil.isOperationSuccess(userMapper.updateById(user),user);

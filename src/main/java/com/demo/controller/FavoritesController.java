@@ -24,14 +24,14 @@ public class FavoritesController {
 
     @ApiOperation("get favorites list by token")
     @GetMapping("/favorites/home")
-    public ResultBean getFavoritesByUserId(@RequestHeader("Authorization") String token){
-        return favoritesService.getFavorByUserId(token);
+    public ResultBean getFavoritesByUserId(@RequestHeader("userId") Integer userId){
+        return favoritesService.getFavorByUserId(userId);
     }
 
     @ApiOperation("create favorites")
     @PostMapping("/favorites/create")
-    public ResultBean createFavoritesById(@RequestHeader("Authorization") String token,@RequestBody FavoritesParam favoritesParam){
-        return favoritesService.createFavorites(token,favoritesParam);
+    public ResultBean createFavoritesById(@RequestHeader("userId") Integer userId,@RequestBody FavoritesParam favoritesParam){
+        return favoritesService.createFavorites(userId,favoritesParam);
     }
 
     @ApiOperation("update favorite by id")
@@ -41,8 +41,8 @@ public class FavoritesController {
     }
     @ApiOperation("delete favorites by id")
     @DeleteMapping("/favorites/delete")
-    public ResultBean deleteFavoritesById(@RequestHeader("Authorization") String token,@RequestParam("fav_id") Integer favId){
-        return favoritesService.deleteFavorites(token,favId);
+    public ResultBean deleteFavoritesById(@RequestHeader("userId") Integer userId,@RequestParam("fav_id") Integer favId){
+        return favoritesService.deleteFavorites(userId,favId);
     }
 
 

@@ -8,6 +8,7 @@ import com.demo.vo.param.UserPasswordUpdateParam;
 import com.demo.vo.param.UserRegisterParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class UserController {
     UserService userService;
     @ApiOperation("get user info by token")
     @GetMapping("/user/home")
-    public ResultBean getUserInfoById(@RequestHeader("Authoriation") String token){
+    public ResultBean getUserInfoById(@RequestHeader("userId") Integer userId){
         //for request header
 //        String authHeader = request.getHeader("Authorization");
 //        if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -29,7 +30,7 @@ public class UserController {
 //        }
 //        return ResultBean.error("fetch information failed");
 
-        return userService.getUserByToken(token.replace("Bearer ", ""));
+        return userService.getUserByToken(userId);
     }
 
 //    @ApiOperation("get user info")
@@ -46,19 +47,19 @@ public class UserController {
 
     @ApiOperation("update user info")
     @PutMapping("/user/update")
-    public ResultBean updateUserInfoById(@RequestHeader("Authorization") String token, @RequestBody UserParam userParam){
-        return userService.updateUserByToken(token, userParam);
+    public ResultBean updateUserInfoById(@RequestHeader("userId") Integer userId, @RequestBody UserParam userParam){
+        return userService.updateUserByToken(userId, userParam);
     }
     @ApiOperation("update user password")
     @PutMapping("/user/password/update")
-    public ResultBean updateUserPassword(@RequestHeader("Authorization")String token, @RequestBody UserPasswordUpdateParam userPasswordUpdateParam){
-        return userService.updatePassword(token,userPasswordUpdateParam);
+    public ResultBean updateUserPassword(@RequestHeader("userId") Integer userId, @RequestBody UserPasswordUpdateParam userPasswordUpdateParam){
+        return userService.updatePassword(userId,userPasswordUpdateParam);
     }
 
     @ApiOperation("delete user account")
     @DeleteMapping("/user/delete")
-    public ResultBean deleteUserByToken(@RequestHeader("Authorization") String token){
-        return userService.deleteUserByToken(token);
+    public ResultBean deleteUserByToken(@RequestHeader("userId") Integer userId){
+        return userService.deleteUserByToken(userId);
     }
 
     @ApiOperation("register")

@@ -1,5 +1,6 @@
 package com.demo.util;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,7 +15,12 @@ public class JwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         final String token = request.getHeader(HEADER_AUTH);
-        if (token != null && jwtTokenUtil.validateToken(token)!=null) {
+        Claims claims=jwtTokenUtil.validateToken(token);
+        if (token != null && claims!=null) {
+            // 解析token中的userid
+            Integer userId = jwtTokenUtil.getUserIdFromToken(token);
+            // 将userid添加到请求头中
+            request.setAttribute("userId", userId);
             return true;
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

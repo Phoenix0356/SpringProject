@@ -13,14 +13,14 @@ import org.springframework.stereotype.Service;
 public interface UserService extends IService<User> {
     ResultBean register(UserRegisterParam userRegisterParam);
     ResultBean login(UserLoginParam userLoginParam);
-    ResultBean getUserByToken(String token);
+    ResultBean getUserByToken(Integer userId);
 //    ResultBean getUserById(int userId);
 
-    ResultBean updateUserByToken(String token,UserParam userParam);
+    ResultBean updateUserByToken(Integer userId, UserParam userParam);
 
-    ResultBean deleteUserByToken(String token);
+    ResultBean deleteUserByToken(Integer userId);
 
-    ResultBean updatePassword(String token, UserPasswordUpdateParam userPasswordUpdateParam);
+    ResultBean updatePassword(Integer userId, UserPasswordUpdateParam userPasswordUpdateParam);
 
     boolean matchPassword(String passwordInput, String passwordOrigin);
 

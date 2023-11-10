@@ -26,14 +26,12 @@ public class FavoritesServiceImpl extends ServiceImpl<FavoritesMapper, Favorites
     }
     //获取一个用户的所有收藏条目
     @Override
-    public ResultBean getFavorByUserId(String token){
-        Integer userId=jwtTokenUtil.getUserIdFromToken(token);
+    public ResultBean getFavorByUserId(Integer userId){
         return ResultBean.success("success",favoritesMapper.selectFavoritesByUserId(userId));
     }
 
     @Override
-    public ResultBean createFavorites(String token,FavoritesParam favoritesParam){
-        Integer userId=jwtTokenUtil.getUserIdFromToken(token);
+    public ResultBean createFavorites(Integer userId, FavoritesParam favoritesParam){
         Favorites favorites=new Favorites();
         favorites.setItemName(favoritesParam.getItemName());
         favorites.setIntroduction(favoritesParam.getIntroduction());
@@ -51,8 +49,7 @@ public class FavoritesServiceImpl extends ServiceImpl<FavoritesMapper, Favorites
     }
 
     @Override
-    public ResultBean deleteFavorites(String token,Integer id){
-        Integer userId=jwtTokenUtil.getUserIdFromToken(token);
+    public ResultBean deleteFavorites(Integer userId,Integer id){
         favoritesMapper.deleteRelation(userId,id);
         return dataUtil.isOperationSuccess(favoritesMapper.deleteById(id));
     }
